@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/home.css">
+    <title>home_page</title>
+</head>
+<body>
+    <!-- nav bar -->
+    <nav class="navbar">
+        <div class="logo">ShopMe</div>
+        <form action="search">
+            <input type="text" name="search" id="search" placeholder="search">
+            <!--<button type="submit">search</button> -->
+        </form>
+        
+        <ul class="nav-links">
+            <li><a href="#">Login</a></li>
+            <li><a href="#">Cart </a></li>
+        </ul>
+    </nav>
+
+    <!-- categoties  -->
+    
+     <div class="categories">
+        <a href="/categories/mens_fashion"><button type="button">mens fashion</button> </a>
+        <a href="/categories/elect"><button type="button">electronics</button></a>
+        <a href="/categories/decors"><button type="button">home decors</button></a>
+        <a href="/categories/beauty">><button type="button">beauty products</button></a>
+        
+     </div>
+     
+     <!-- products views  -->
+    <div class="product_list">
+        {% for product in products %}
+
+        <div class="product">
+            <img src="{{ url_for('static', filename='image/' +  product.image)  }}"width=300px alt="image">
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+            <p>₹{{ product.price }}</p>
+            </div>
+
+            {% endfor %}
+
+    </div>
+
+
+</body>
+</html>
