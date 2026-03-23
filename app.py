@@ -1,5 +1,5 @@
 
-from flask import Flask ,render_template , request , redirect , session
+from flask import Flask ,render_template , request , redirect , session ,url_for,jsonify
 app = Flask(__name__)
 
 app.secret_key = "secret8053"
@@ -99,13 +99,13 @@ products = [
 def home():
     return render_template("home.html" , products=products , username = session.get("username"))
 
-#-------------------------------------------login------------------------------------------------
+
 #----------------------------------------login_page-----------------------------------------------
 
 @app.route("/login", methods=["GET","POST"])
 def login():
 
-    if request.method == "POST":
+    #if request.method == "POST":
 
         username = request.form["username"]
         password = request.form["password"]
@@ -113,13 +113,19 @@ def login():
         # simple login check
         if username == "sajin" and password == "1234":
             session["username"] = username
-            return redirect("/")
+            return jsonify({"success":True})
+        else:
+            return jsonify({
+                "success":False ,
+                "message":"invalid username or password"})
+        
+        '''
         else:
             error = "Invalid Username or Password"
-            #return error
-            return render_template("home.html",products=products,error = error , show_login=True, username=session.get("username"))
+            return render_template("home.html",error=error ,products=products,show_login=True,username=session.get("username"))
     
-     #return render_template("home.html",error = error , show_login=True, username=session.get("username")) redirect()
+    #return render_template("home.html" , show_login=True, username=session.get("username"))
+    '''
 
     
 
@@ -138,7 +144,8 @@ def mens_faction():
     for product in products:
         if product["categories"] == "mens_fashion":
             filter_products.append(product)
-    return render_template("home.html", products=filter_products)
+            
+    return render_template("home.html", products=filter_products )
 
 
 @app.route("/categories/elect")
@@ -148,6 +155,7 @@ def elect():
     for product in products:
         if product["categories"] == "elect":
             filter_products.append(product)
+            
     return render_template("home.html", products=filter_products)
 
 @app.route("/categories/decors")
@@ -157,6 +165,7 @@ def decors():
     for product in products:
         if product["categories"] == "decors":
             filter_products.append(product)
+            
     return render_template("home.html", products=filter_products)
 
 @app.route("/categories/beauty")
@@ -166,20 +175,52 @@ def beauty():
     for product in products:
         if product["categories"] == "beauty":
             filter_products.append(product)
+            
     return render_template("home.html", products=filter_products)
 
 #----------------------------search products-----------------------------------------------------
+'''
+
 @app.route("/search" ,methods=["GET"])
 def search():
     search = request.args.get("search")
     result = []
 
-    if search:
+    if search:                                                                                                       # ------this is the search before including the js for search box 
         for product in products:
             if search.lower() in product["name"].lower() or search.lower() in product["description"].lower():
                 result.append(product)
         return render_template("home.html", products = result)
+        
+    '''
 
+# ---------------------------------------for dropdown suggestions---------------------------------------------------------
+@app.route("/search-suggestions")
+def search_suggestions():
+    query = request.args.get("q", "").lower().strip()
+    results = []
+
+    if query:
+        for product in products:
+            if query in product["name"].lower():
+                results.append(product["name"])
+
+    return jsonify(results)
+
+#------------------------------------ for full search result page---------------------------------------------------
+@app.route("/search")
+def search():
+    query = request.args.get("q", "").lower().strip()
+    matched_products = []
+
+    if query:
+        for product in products:
+            if query in product["name"].lower():
+                matched_products.append(product)
+                
+
+    return render_template("home.html", products=matched_products, query=query,username=session.get("username"))
+    
 
 #------------------------------------------product__page------------------------------------------
 
@@ -187,7 +228,8 @@ def search():
 def product_detail(id):
     for product in products:
         if product["id"] == id:
-            return render_template("product.html", product=product)
+            username=session.get("username")
+            return render_template("product.html", product=product, username=username)
 
 if __name__=="__main__":
     app.run(debug=True)
