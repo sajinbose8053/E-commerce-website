@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>navbar</title>
+    <link rel="stylesheet" href="/static/home.css">
+    
+</head>
+<body>
+       <nav class="navbar navbar-expand-lg navbar-light bg-dark  px-3  sticky-top" id="#navbar">
+
+        <a class="navbar-brand text-danger" href="/">ShopMe</a>
+
+    
+
+                <form class="d-flex mx-auto" action="/search" method="GET" style="width:40%;" >
+                    <div class="search-wrapper w-100">
+                        <input class="form-control rounded-5" id="searchInput" type="text" name="q" placeholder="Search Products.."   autocomplete="off"> 
+                        
+                     <!--<span class="input-group-text"><i class="bi bi-search"></i></span>-->
+                        <div id="suggestionBox" class="suggestions">
+        
+                           <!--{% for product in products %}
+                            <option value="{{ product.name }}"></option>
+                            {% endfor %}
+                        -->
+                            
+                            
+                        </div>
+                    </div>
+                </form>
+
+
+        
+
+<div class="d-flex">
+
+    {% if username %}
+
+    <div class="dropdown me-2">
+
+        <button class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown">
+        <img src="/static/image/user.png" width="25"> {{username}}
+        </button>
+
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person-fill">  My Account</i></a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-bag">  My Orders</i></a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-heart-fill">  Wishlist</i></a></li>
+            <li><a class="dropdown-item" href="/logout"><i class="bi bi-box-arrow-left">  Logout</i></a></li>
+        </ul>
+
+    </div>
+
+    {% else %}
+
+    <button class="btn btn-secondary me-2 px-3" data-bs-toggle="modal" data-bs-target="#loginModal">
+    Login
+    </button>
+
+    {% endif %}
+
+    <a href="/cart" class="btn btn-danger">
+    <img src="/static/image/shopping-cart.png" width="25"> Cart
+    </a>
+
+</div>
+
+</nav>
+
+<!--======================================= login popup =======================================-->
+<div class="modal fade" id="loginModal">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Login</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                
+                <form action="/login" method="POST" id="loginForm">
+
+                    <input class="form-control mb-3" type="text" name="username" placeholder="Username" required>
+
+                    <input class="form-control mb-3" type="password" name="password" placeholder="Password" required>
+                    <!--
+                        {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                        {% endif %}
+                    -->
+                        <div id="loginError" class="text-danger"> </div>
+                        <br>
+                    <button  type="submit" class="btn btn-primary w-100">Login</button>
+
+                    <p class="text-center mt-3">
+                    Don't have an account?
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#signupModal" data-bs-dismiss="modal">SignUP</a>
+                    </p>
+
+                </form>
+        
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--===============================================signup popup=======================================-->
+<div class="modal fade" id="signupModal">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Signup</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <form action="/signup" method="POST">
+
+                    <input class="form-control mb-3" type="text" name="username" placeholder="Username" required>
+
+                    <input class="form-control mb-3" type="email" name="email" placeholder="Email" required>
+
+                    <input class="form-control mb-3" type="tel" pattern="[0-9]{10}" maxlength="10" name="phone" placeholder="Phone">
+
+                    <input class="form-control mb-3" type="password" name="password" placeholder="Password">
+
+                    <button class="btn btn-success w-100">Signup</button>
+
+                    <p class="text-center mt-3">
+                        Already have an account?
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">
+                        Login
+                        </a>
+                    </p>
+
+                </form>
+
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
